@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Geolocation API</title>
+    <script>
+        window.addEventListener('DOMContentLoaded',
+            function() {
+                var result = document.querySelector('#result');
+                var stop = document.querySelector('#stop');
+                if (navigator.geolocation) {
+                    var id = navigator.geolocation.watchPosition(
+                        function(pos) {
+                            msg = 'Latitude: ' + pos.coords.latitude + '<br>' +
+                                'Longitude: ' + pos.coords.longitude + '<br>' +
+                                'Direction: ' + pos.coords.heading;
+                            result.innerHTML = msg;
+                        },
+                        function(err) {
+                            var msgs = [
+                                err.message,
+                                'Permission denied.',
+                                'Position unavailable.',
+                                'Timeout.'
+                            ];
+                            alert(msgs[err.code]);
+                        }, {
+                            timeout: 10000,
+                            maximumAge: 0,
+                            enableHighAccuracy: true
+                        }
+                    );
+                    stop.addEventListener('click',
+                        function() {
+                            navigator.geolocation.clearWatch(id);
+                        }
+                    );
+                } else {
+                    alert("Your browser doesn't support the Geolocation API.");
+                }
+            }, false
+        );
+    </script>
+</head>
+
+<body>
+    <div id="result">
+    </div>
+    <input id="stop" type="button" value="Stop monitoring">
+</body>
+
+</html>

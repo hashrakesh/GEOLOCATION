@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Canvas</title>
+    <style>
+        #canvas {
+            background: black;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="500" height="500">Your browser doesn't support the canvas element.</canvas>
+    <input id="save" type="button" value="Save">
+
+    <script>
+        window.addEventListener('DOMContentLoaded',
+            function() {
+                if (HTMLCanvasElement) {
+                    var canvas = document.querySelector('#canvas');
+                    var ctx = canvas.getContext('2d');
+                    ctx.beginPath();
+                    ctx.moveTo(100, 25);
+                    ctx.lineTo(50, 100);
+                    ctx.lineTo(100, 175);
+                    ctx.lineTo(175, 175);
+                    ctx.lineTo(225, 100);
+                    ctx.lineTo(175, 25);
+                    ctx.closePath();
+                    ctx.lineWidth = 5;
+                    ctx.fillStyle = '#fcf'
+                    ctx.strokeStyle = '#f00';
+                    ctx.stroke();
+                    ctx.fill();
+                }
+                document.getElementById('save').addEventListener('click', function(e) {
+                    var img = new Image();
+                    img.src = canvas.toDataURL('image/png');
+                    img.addEventListener('load', function(e) {
+                        document.body.appendChild(img);
+                    });
+                }, false);
+            }
+        );
+    </script>
+</body>
+
+</html>

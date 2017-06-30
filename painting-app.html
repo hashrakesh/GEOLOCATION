@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Canvas</title>
+    <style>
+        ul {
+            margin: 0;
+            padding: 0;
+            display: inline-block;
+            float: left;
+            margin-right: 10px;
+            list-style: none;
+        }
+        ul li { margin: 10px; }
+        #canvas {
+            background: orange;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li><button id="rectBtn">Rectangle</button></li>
+        <li><button id="freeBtn">Freehand</button></li>
+        <li><button id="delete">Clear</button></li>
+        <li><button id="save">Output</button></li>
+        <li><input type="color" id="colorBtn" value="#000000"></li>
+    </ul>
+    <canvas id="canvas" width="500" height="300">Your browser doesn't support the canvas element.</canvas>
+    <script>
+        window.addEventListener('DOMContentLoaded',
+            function() {
+                if (HTMLCanvasElement) {
+                    var cv = document.querySelector('#canvas');
+                    var c = cv.getContext('2d');
+
+                    var startX = 0, startY = 0, endX, endY, tools = 0;
+
+                    document.getElementById('rectBtn').addEventListener('click', function(e) {
+                        tools = 0;
+                    });
+                    document.getElementById('freeBtn').addEventListener('click', function(e) {
+                        tools = 1;
+                    });
+                    document.getElementById('colorBtn').addEventListener('change', function(e) {
+                        var newColor = e.target.value;
+                        c.strokeStyle = newColor;
+                    });
+                    cv.addEventListener('mousedown', function(e) {
+                        var rect = e.target.getBoundingClientRect();
+                        startX = e.clientX-rect.left;
+                        startY = e.clientY-rect.top;
+                        if(tools === 0) {
+                            cv.addEventListener('mousemove', drawRect);
+                        }
+                        else if(tools === 1) {
+                            c.beginPath();
+                            cv.addEventListener('mousemove', drawFree);
+                        }
+                    });
+                    function drawRect(e){
+                        var rect = e.target.getBoundingClientRect();
+                        endX = e.clientX-rect.left;
+                        endY = e.clientY-rect.top;
+                        cv.addEventListener('mouseup', endRect);
+                        function endRect(e) {
+                            c.strokeRect(startX,startY,endX-startX,endY-startY);
+                            cv.removeEventListener('mousemove', drawRect);
+                            cv.removeEventListener('mouseup', endRect);
+                        }
+                    }
+                    function drawFree(e){
+                        var rect = e.target.getBoundingClientRect();
+                        endX = e.clientX-rect.left;
+                        endY = e.clientY-rect.top;
+                        c.lineTo(endX, endY);
+                        c.stroke();
+                        cv.addEventListener('mouseup', function(e){
+                            cv.removeEventListener('mousemove', drawFree)
+                        });
+                    }
+                    document.getElementById('delete').addEventListener('click', function(e) {
+                        c.clearRect(0, 0, cv.width, cv.height);
+                    });
+                    document.getElementById('save').addEventListener('click', function(e) {
+                        var dataURL = cv.toDataURL("image/png");
+                        window.location = dataURL;
+                    });
+                }
+            }
+        );
+    </script>
+</body>
+
+</html>

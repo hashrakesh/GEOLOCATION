@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Geolocation API</title>
+    <script>
+        window.addEventListener('DOMContentLoaded',
+            function() {
+                var result = document.querySelector('#result');
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function(pos) {
+                            msg = 'Latitude: ' + pos.coords.latitude + '<br>' +
+                                'Longitude: ' + pos.coords.longitude + '<br>' +
+                                'Direction: ' + pos.coords.heading;
+                            result.innerHTML = msg;
+                        },
+                        function(err) {
+                            var msgs = [
+                                err.message,
+                                'Permission denied.',
+                                'Position unavailable.',
+                                'Timeout.'
+                            ];
+                            alert(msgs[err.code]);
+                        }, {
+                            timeout: 10000,
+                            maximumAge: 0,
+                            enableHighAccuracy: true
+                        }
+                    );
+                } else {
+                    alert("Your browser doesn't support the Geolocation API.");
+                }
+            }, false
+        );
+    </script>
+</head>
+
+<body>
+    <div id="result">
+    </div>
+</body>
+
+</html>

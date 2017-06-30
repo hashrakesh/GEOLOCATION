@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Canvas</title>
+    <style>
+        #canvas {
+            background: black;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="500" height="300">Your browser doesn't support the canvas element.</canvas>
+
+    <script>
+        window.addEventListener('DOMContentLoaded',
+            function() {
+                if (HTMLCanvasElement) {
+                    var cv = document.querySelector('#canvas');
+                    var c = cv.getContext('2d');
+                    var x = 0, y = 0;
+                    setInterval(function() {
+                        c.clearRect(0, 0, 500, 300);
+                        c.fillStyle = "red";
+                        c.fillRect(x, y, 20,20);
+                        x++;
+                        y++;
+                    }, 10);
+                }
+            }
+        );
+    </script>
+</body>
+
+</html>
